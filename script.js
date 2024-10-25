@@ -1,52 +1,70 @@
+const events = [];
+
 document.getElementById("eventForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
-  // Retrieve form values
-  const dateInput = document.getElementById("date").value;
-  const timeInput = document.getElementById("time").value;
+  const dateInput = document.getElementById("date").value; // e.g., "2024-10-25"
+  const timeInput = document.getElementById("time").value; // e.g., "08:30 PM"
   const descriptionInput = document.getElementById("description").value;
   const linkInput = document.getElementById("link").value;
+  const showRelativeTime = document.getElementById("relativeTime").checked;
+  const [year, month, day] = dateInput.split("-").map(Number);
+  let [hour, minute] = timeInput.match(/\d+/g).map(Number);
+  const isPM = timeInput.toLowerCase().includes("pm");
 
-  // Combine date and time, then create a Date object
-  const dateTimeString = `${dateInput}T${timeInput}:00`; // Format as "YYYY-MM-DDTHH:MM:SS"
-  const date = new Date(dateTimeString);
+  if (isPM && hour < 12) hour += 12; // Convert PM to 24-hour time
+  if (!isPM && hour === 12) hour = 0; // Convert 12 AM to 0 hours
 
-  // Check if the date is valid
+  const date = new Date(year, month - 1, day, hour, minute);
+
   if (isNaN(date)) {
     alert("Invalid date or time format. Please check your inputs.");
     return;
   }
 
-  // Get the day name and the Unix timestamp for the Discord format
-  const dayName = date.toLocaleDateString("en-US", { weekday: "long" });
+  // Get the Unix timestamp and day name
   const epochTime = Math.floor(date.getTime() / 1000);
+  const dayName = date.toLocaleDateString("en-US", { weekday: "long" });
 
-  // Format the event text with Markdown
-  let eventText = `- <t:${epochTime}:t> — ${descriptionInput}`;
-  if (linkInput) {
-    eventText += ` [${descriptionInput}](${linkInput})`;
-  }
+  events.push({
+    date: date,
+    dayName: dayName,
+    epochTime: epochTime,
+    description: descriptionInput,
+    link: linkInput,
+    showRelativeTime: showRelativeTime
+  });
 
-  // Append formatted event to the output
-  const output = document.getElementById("output");
-  
-  // Wrap entire schedule output in a code block
-  if (output.innerHTML === "") {
-    output.innerHTML = "```markdown\n"; // Start the code block with Markdown hint
-  }
-
-  // Add day header if it's a new day
-  const existingHeader = Array.from(output.querySelectorAll("h3")).find(header => header.textContent === dayName);
-  if (!existingHeader) {
-    output.innerHTML += `\n### ${dayName}\n`; // Add the day as a header
-  }
-
-  // Add event line with formatted time
-  output.innerHTML += `${eventText}\n`;
-
-  // End the code block when done
-  output.innerHTML += "```";
-  
-  // Reset the form fields
   document.getElementById("eventForm").reset();
+  document.getElementById("relativeTime").checked = showRelativeTime;
+
+  // Update the displayed schedule
+  updateScheduleOutput();
 });
+
+function updateScheduleOutput() {
+  events.sort((a, b) => a.date - b.date);
+
+  const output = document.getElementById("output");
+  output.innerText = "";
+
+  let currentDay = "";
+  events.forEach(event => {
+    if (event.dayName !== currentDay) {
+      output.innerText += `### ${event.dayName}\n`;
+      currentDay = event.dayName;
+    }
+    
+    let eventText = `- <t:${event.epochTime}:t>`;
+    if (event.showRelativeTime) {
+      eventText += ` (<t:${event.epochTime}:R>)`;
+    }
+    eventText += ` — ${event.description}`;
+    
+    if (event.link) {
+      eventText += ` [${event.description}](${event.link})`;
+    }
+
+    output.innerText += `${eventText}\n`;
+  });
+}

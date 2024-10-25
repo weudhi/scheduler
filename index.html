@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Schedule Generator</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
   <h1>Schedule Generator</h1>
@@ -13,14 +14,18 @@
     <label for="date">Date:</label>
     <input type="date" id="date" required><br>
 
-    <label for="time">Time (HH:MM):</label>
-    <input type="time" id="time" required><br>
+    <label for="time">Time:</label>
+    <input type="text" id="time" placeholder="Select time" required><br>
 
     <label for="description">Description:</label>
     <input type="text" id="description" required><br>
 
     <label for="link">Link (optional):</label>
     <input type="url" id="link"><br>
+    
+    <label>
+      <input type="checkbox" id="relativeTime"> Show Relative Time
+    </label><br>
 
     <button type="submit">Add Event</button>
   </form>
@@ -29,5 +34,14 @@
   <div id="output"></div>
   
   <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    flatpickr("#time", {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "h:i K", // 12-hour format with AM/PM
+      time_24hr: false
+    });
+  </script>
 </body>
 </html>
