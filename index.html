@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule Generator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Schedule Generator</h1>
+  
+  <form id="eventForm">
+    <label for="date">Date:</label>
+    <input type="date" id="date" required><br>
+
+    <label for="time">Time (HH:MM):</label>
+    <input type="time" id="time" required><br>
+
+    <label for="description">Description:</label>
+    <input type="text" id="description" required><br>
+
+    <label for="link">Link (optional):</label>
+    <input type="url" id="link"><br>
+
+    <button type="submit">Add Event</button>
+  </form>
+
+  <h2>Generated Schedule</h2>
+  <div id="output"></div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
