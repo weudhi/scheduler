@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Message</title>
+</head>
+<body>
+    <div id="content">Default Content</div>
+
+    <script>
+        // Retrieve the URL parameter
+        const params = new URLSearchParams(window.location.search);
+        const message = params.get("message");
+
+        // Replace the content of the div if a message parameter is provided
+        if (message) {
+            document.getElementById("content").innerText = message;
+        }
+    </script>
+</body>
+</html>
