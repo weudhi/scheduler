@@ -59,12 +59,13 @@ function updateScheduleOutput() {
     if (event.showRelativeTime) {
       eventText += ` (<t:${event.epochTime}:R>)`;
     }
-    eventText += ` — ${event.description}`;
     
     if (event.link) {
-      eventText += ` [${event.description}](${event.link})`;
+      eventText += ` - [${event.description}](${event.link})`;
+    } else {
+      eventText += ` — ${event.description}`;
     }
-
+    
     output.innerText += `${eventText}\n`;
   });
 }
