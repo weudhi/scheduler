@@ -1,5 +1,5 @@
 const events = [];
-let selectedDateTime = new Date().toISOString(); // Default to current date and time
+let selectedDateTime = new Date().toISOString();
 
 document.getElementById("eventForm").addEventListener("submit", function (e) {
   e.preventDefault();
@@ -7,6 +7,7 @@ document.getElementById("eventForm").addEventListener("submit", function (e) {
   const descriptionInput = document.getElementById("description").value;
   const linkInput = document.getElementById("link").value;
   const showRelativeTime = document.getElementById("relativeTime").checked;
+  const dateOnly = document.getElementById("dateOnly").checked;
 
   if (!selectedDateTime) {
     alert("Please select a date and time.");
@@ -31,11 +32,14 @@ document.getElementById("eventForm").addEventListener("submit", function (e) {
     epochTime: epochTime,
     description: descriptionInput,
     link: linkInput,
-    showRelativeTime: showRelativeTime
+    showRelativeTime: showRelativeTime,
+    dateOnly: dateOnly
   });
 
   document.getElementById("description").value = "";
   document.getElementById("link").value = "";
+  // document.getElementById("relativeTime").checked = false;
+  document.getElementById("dateOnly").checked = false;
 
   updateScheduleOutput();
 });
@@ -49,26 +53,29 @@ function updateScheduleOutput() {
   let currentDay = "";
   events.forEach(event => {
     if (event.formattedDate !== currentDay) {
-      outputText += `### ${event.formattedDate}\n`;
+      outputText += `### __${event.formattedDate}__\n`;
       currentDay = event.formattedDate;
     }
 
-    let eventText = `- <t:${event.epochTime}:t>`;
-    if (event.showRelativeTime) {
-      eventText += ` (<t:${event.epochTime}:R>)`;
+    let eventText = event.dateOnly ? `-` : `- **<t:${event.epochTime}:t>**`;
+    if (event.showRelativeTime && !event.dateOnly) {
+      eventText += ` (**<t:${event.epochTime}:R>**)`;
     }
     
+	eventText += event.dateOnly ? ` ` : ` — `;
     if (event.link) {
-      eventText += ` [${event.description}](${event.link})`;
+      eventText += `[${event.description}](${event.link})`;
     } else {
-	  eventText += ` — ${event.description}`;
-	}
+      eventText += `${event.description}`;
+    }
 
     outputText += `${eventText}\n`;
   });
 
+  outputText += `-# Times are shown in your local timezone.`;
   output.innerText = outputText;
 }
+
 
 function getDaySuffix(day) {
   if (day >= 11 && day <= 13) {

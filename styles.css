@@ -73,7 +73,7 @@ button[type="submit"]:active {
   transform: scale(1.02);
 }
 
-#relativeTimeLabel {
+.custom-checkbox {
   font-size: 0.9em;
   margin-top: 10px;
   display: flex;
@@ -81,27 +81,37 @@ button[type="submit"]:active {
   cursor: pointer;
 }
 
-#relativeTimeLabel input[type="checkbox"] {
+.custom-checkbox input[type="checkbox"] {
   display: none;
 }
 
-#relativeTimeLabel .checkbox-mark {
+.custom-checkbox .checkbox-mark {
   width: 24px;
   height: 24px;
   background-color: #f9f9f9;
   border: 2px solid #007BFF;
   border-radius: 4px;
   margin-right: 10px;
+  margin-left: 10px;
   position: relative;
 }
 
-#relativeTimeLabel input[type="checkbox"]:checked + .checkbox-mark {
+.custom-checkbox input[type="checkbox"]:checked + .checkbox-mark {
   background-color: #007BFF;
 }
 
-#relativeTimeLabel input[type="checkbox"]:checked + .checkbox-mark:after {
+.custom-checkbox input[type="checkbox"]:checked + .checkbox-mark:after {
   display: block;
 }
+
+form label.custom-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%; /* Make label full width to align with other inputs */
+  margin-bottom: 5px;
+}
+
 
 #outputContainer {
   border: 1px solid #ccc;
